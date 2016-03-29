@@ -30,7 +30,8 @@ Un ejemplo de cuerpo de envío sería:
   - ```scan```: Lista de puntos extraidos del módulo de visión, que es un array
     de puntos con el número de objetivos de esa posición, y los siguientes subvalores:
       + ```coordinates``` : Coordenadas ```x``` e ```y``` del punto.
-      + ```enemies``` : Tipo de enemigo (```type```) y número (```number```).
+      + ```enemies``` : Tipo de enemigo ```type``` y número ```number```. Los
+        posibles valores de type serán: **soldier** y **mech**.
       + (optional) ```allies``` : Número de aliados que hay en dicha posición. Si
         no está presente este valor, significa que no hay aliados en la zona.
 
@@ -55,7 +56,7 @@ Protocolos disponibles:
  - **avoid-crossfire** : No debe de atacarse ningún punto en el que haya algún
    aliado.
 
- - **priorize-mech** : Debe de atacarse un *mech* si se encuentra. En caso
+ - **prioritize-mech** : Debe de atacarse un *mech* si se encuentra. En caso
    negativo, cualquier otro tipo de objetivo será válido.
  - **avoid-mech** : No debe de atacarse ningún enemigo del tipo *mech*
 
@@ -67,6 +68,10 @@ presentes.
 En todo caso se proporcionarán protocolos compatibles entre sí. Puede asumirse
 que en ningún caso el módulo recibirá, por ejemplo, los protocolos
 **closest-enemies** y **furthest-enemies** en la misma petición.
+
+Lo ideal sería que, cuando nuestras fuerzas de inteligencia decidan implementar
+nuevos protocolos teniendo en cuenta otros factores, la solución propuesta
+pueda ser extendida con facilidad para aceptar estos nuevos criterios.
 
 Dado que esta labor es de vital importancia para nosotros, la Nueva República,
 hemos provisto una serie de casos de prueba que verificarán que el algoritmo
