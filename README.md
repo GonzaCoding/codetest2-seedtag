@@ -20,7 +20,7 @@ El objetivo de la misión es desarrollar un **endpoint HTTP** que acepte datos
 El módulo de visión enviará una petición **POST** a ```/radar``` con la
 información que recibe de su entorno, y el módulo que usted debe desarrollar
 deberá devolver cuales son las coordenadas del objetivo visible que debe de ser
-atacado.
+atacado, y que debe de estar siempre a 100 metros o menos.
 
 Un ejemplo de cuerpo de envío sería:
 ```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemy":{"type":"soldier","number":10}}]}```
