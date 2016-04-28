@@ -20,7 +20,7 @@ El objetivo de la misión es desarrollar un **endpoint HTTP** que acepte datos
 El módulo de visión enviará una petición **POST** a ```/radar``` con la
 información que recibe de su entorno, y el módulo que usted debe desarrollar
 deberá devolver cuales son las coordenadas del objetivo visible que debe de ser
-atacado, y que debe de estar siempre a 100 metros o menos.
+atacado.
 
 Un ejemplo de cuerpo de envío sería:
 ```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemy":{"type":"soldier","number":10}}]}```
@@ -68,6 +68,10 @@ presentes.
 En todo caso se proporcionarán protocolos compatibles entre sí. Puede asumirse
 que en ningún caso el módulo recibirá, por ejemplo, los protocolos
 **closest-enemies** y **furthest-enemies** en la misma petición.
+
+Finalmente es importante tener en cuenta que los objetivos a una distancia superior
+a **100m** se consideran demasiado alejados para ser atacados y por lo tanto deben ser
+ignorados.
 
 Lo ideal sería que, cuando nuestras fuerzas de inteligencia decidan implementar
 nuevos protocolos teniendo en cuenta otros factores, la solución propuesta
