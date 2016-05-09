@@ -23,7 +23,7 @@ deberá devolver cuales son las coordenadas del objetivo visible que debe de ser
 atacado.
 
 Un ejemplo de cuerpo de envío sería:
-```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemy":{"type":"soldier","number":10}}]}```
+```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemies":{"type":"soldier","number":10}}]}```
 
   - ```protocols```: Protocolo o lista de protocolos que han de ser usados para
     determinar cual de los siguientes puntos debe de atacarse primero.
