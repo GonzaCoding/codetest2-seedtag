@@ -73,16 +73,21 @@ Finalmente es importante tener en cuenta que los objetivos a una distancia super
 a **100m** se consideran demasiado alejados para ser atacados y por lo tanto deben ser
 ignorados.
 
-Lo ideal sería que, cuando nuestras fuerzas de inteligencia decidan implementar
-nuevos protocolos teniendo en cuenta otros factores, la solución propuesta
-pueda ser extendida con facilidad para aceptar estos nuevos criterios.
+Consideraciones adicionales:
+----------------------------
 
-Dado que esta labor es de vital importancia para nosotros, la Nueva República,
-hemos provisto una serie de casos de prueba que verificarán que el algoritmo
-funciona correctamente.
+Nuestras fuerzas de inteligencia obtienen nueva información y estrategias enemigas cada día
+por lo que es fundamental que el código generado sea fácil de mantener y extender. Para ello,
+deberán aplicarse buenas prácticas de **programación orientada a objetos** y **testing**.
+
+Dado que esta labor es de vital importancia para la Nueva República,
+hemos provisto una serie de casos de prueba que verificarán al menos que el algoritmo funciona correctamente.
 
 Deberás tener ```curl``` instalado y ejecutar el comando ```./tests.sh``` en tu
 máquina OSX o Linux
+
+Entrega:
+--------
 
 Al finalizar la misión, se precisa que comprima todos los ficheros fuente, con
 este repositorio incluido en un fichero que se llame:
