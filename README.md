@@ -5,13 +5,13 @@ Seedtag Codetest 2: Backend Engineer
 
 Beloved **Commander Lando Calrissian**
 
-We appreciate your labour during all these years in Varn and Kessel for the new republic. It's widely known your ability in the creation of droids and armament. Because these reasons we need your help to finish the new combat droid *YVH* still missing targets to attact selection module.
+We appreciate your labour during all these years in Varn and Kessel for the New Republic. Your ability in the creation of droids and armament is widely known. Because these reasons we need your help to finish the new combat droid *YVH* still missing a selection module to get targets to attack.
 
-The *YVH* modules have a sofisticated communication system between them by **API HTTP** requests.
+The *YVH* modules have a sofisticated communication system between them via **API HTTP** requests.
 
 The mission's objective is to develop a **HTTP endpoint** that receives **JSON** data and returns **JSON** data.
 
-The visioin module will send a **POST** request to ```/radar``` with the information of its environment. The module you have to develop should return which are the coordinates of the visible objective which should be attacked.
+The vision module will send a **POST** request to ```/radar``` with the information of its environment. The module you have to develop should return which are the coordinates of the visible objective which should be attacked.
 
 A request body example could be:
 ```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemies":{"type":"soldier","number":10}}]}```
@@ -26,9 +26,9 @@ The answer should contain coordinates ```x``` and ```y``` and the following poin
 
 An example of the response body for the previous example would be ```{"x":0,"y":40}```. Hence, our *YVH* combat droid would know which is the following element to destroy.
 
-To determine which is the following point to be destroyed, selected protocols and act by the rules should be followed.
+To determine which is the following point to be destroyed, protocols and rules should be followed.
 
-Available protocols:
+Available protocols
 -----------------------
 
  - **closest-enemies** : Closest point in which there are enemies should be prioritized.
@@ -46,16 +46,16 @@ In any case compatible protocols between each other will be provided. You could 
 
 Finally it's important having into account that the targets on a distance above *100m* are considered too far to be attacked so these points should be ignored.
 
-Additional considerations:
+Additional considerations
 ----------------------------
 
-Our intelligence forces get new information and strategies every day, so it's fundamental that the generated code is easy to mantain and extend. To do that good practises as **object oriented programming** and **testing** should be applied.
+Our intelligence forces get new information and strategies every day, so it's fundamental that the generated code is easy mantainable and extendable. To do that, good practises as **object oriented programming** and **testing** should be applied.
 
 Given that this labour is crucial for the New Republic, we have provided several test cases that will at least verify that the algorithm works correctly.
 
 You should have ```curl``` installed and run the command ```./tests.sh``` in your OSX or Linux machine.
 
-Delivery:
+Delivery
 --------
 
 When the mission is over, it is required to compress all source files with this repository included in a zip file named ```<username-en-github>_codetest2_seedtag.zip``` and send it as email to ```alianza@seedtag.com```
