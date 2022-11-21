@@ -3,7 +3,7 @@ Seedtag Codetest 2: Backend Engineer
 
 ![Tendrando Arms](http://vignette4.wikia.nocookie.net/starwars/images/c/cd/Tendrando_Arms.svg/revision/latest/scale-to-width-down/500?cb=20080311193640)
 
-Beloved **Commander Lando Calrissian**
+Beloved **Commander Lando Calrissian**,
 
 We appreciate your labour during all these years in Varn and Kessel for the New Republic. Your ability in the creation of droids and armament is widely known. Because these reasons we need your help to finish the new combat droid *YVH* still missing a selection module to get targets to attack.
 
@@ -44,7 +44,7 @@ It's important to mention that several protocols could be provided in the reques
 
 In any case compatible protocols between each other will be provided. You could assume that in any case the module will recieve the protocols **closest-enemies** and **furthest-enemies** in the same request.
 
-Finally it's important having into account that the targets on a distance above *100m* are considered too far to be attacked so these points should be ignored.
+Finally, it's important having into account that the targets on a distance above *100m* are considered too far to be attacked so these points should be ignored.
 
 Additional considerations
 ----------------------------
