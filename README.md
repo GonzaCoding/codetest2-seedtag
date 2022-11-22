@@ -3,15 +3,15 @@ Seedtag Codetest 2: Backend Engineer
 
 ![Tendrando Arms](http://vignette4.wikia.nocookie.net/starwars/images/c/cd/Tendrando_Arms.svg/revision/latest/scale-to-width-down/500?cb=20080311193640)
 
-Beloved **Commander Lando Calrissian**,
+Beloved **General Lando Calrissian**,
 
-We appreciate your labour during all these years in Varn and Kessel for the New Republic. Your ability in the creation of droids and armament is widely known. Because these reasons we need your help to finish the new combat droid *YVH* still missing a selection module to get targets to attack.
+We appreciate your labour during all these years in Varn and Kessel for the New Republic. You are notably known for your skill in creating droids and weaponry. That is why we need your help to finish the new battle droid *YVH* that still lacks the targeting module to attack.
 
 The *YVH* modules have a sofisticated communication system between them via **API HTTP** requests.
 
 The mission's objective is to develop a **HTTP endpoint** that receives **JSON** data and returns **JSON** data.
 
-The vision module will send a **POST** request to ```/radar``` with the information of its environment. The module you have to develop should return which are the coordinates of the visible objective which should be attacked.
+The vision module will send a **POST** request to ```/radar``` with the information from its environment. The module you have to develop should return which are the coordinates of the visible objective which must be attacked.
 
 A request body example could be:
 ```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemies":{"type":"soldier","number":10}}]}```
@@ -26,7 +26,7 @@ The answer should contain coordinates ```x``` and ```y``` and the following poin
 
 An example of the response body for the previous example would be ```{"x":0,"y":40}```. Hence, our *YVH* combat droid would know which is the following element to destroy.
 
-To determine which is the following point to be destroyed, protocols and rules should be followed.
+To determine which is the following point to be destroyed the next protocols and rules must be followed.
 
 Available protocols
 -----------------------
@@ -42,7 +42,7 @@ Available protocols
 
 It's important to mention that several protocols could be provided in the request. As an example, if we receive the protocols **closest-enemies** and **assist-allies**, we should choose the closest point having allies present.
 
-In any case compatible protocols between each other will be provided. You could assume that in any case the module will recieve the protocols **closest-enemies** and **furthest-enemies** in the same request.
+In any case compatible protocols between each other will be provided. You could assume that in no case the module will recieve the protocols **closest-enemies** and **furthest-enemies** in the same request.
 
 Finally, it's important having into account that the targets on a distance above *100m* are considered too far to be attacked so these points should be ignored.
 
