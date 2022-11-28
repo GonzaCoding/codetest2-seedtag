@@ -3,96 +3,62 @@ Seedtag Codetest 2: Backend Engineer
 
 ![Tendrando Arms](http://vignette4.wikia.nocookie.net/starwars/images/c/cd/Tendrando_Arms.svg/revision/latest/scale-to-width-down/500?cb=20080311193640)
 
-Estimado **Comandante Lando Calrissian**,
+Beloved **General Lando Calrissian**,
 
-Apreciamos la labor que ha realizado durante todos estos años en Varn y Kessel
-para la Nueva República. Es notablemente conocida su habilidad en la creación
-de droides y armamento. Es por ello que necesitamos su ayuda para terminar el
-nuevo droide de combate *YVH* al que aún le falta el módulo de selección de
-objetivos a atacar.
+We appreciate your work over all these years in Varn and Kessel for the New Republic. You have made a name for yourself for your skill creating droids and weaponry. That is why we need your help to finish the new battle droid *YVH* that still lacks the targeting module to attack.
 
-Los módulos del *YVH* disponen de un sofisticado sistema de comunicación entre
-ellos mediante peticiones a un **API HTTP**.
+The *YVH* modules have a sophisticated communication system between them via **API HTTP** requests.
 
-El objetivo de la misión es desarrollar un **endpoint HTTP** que acepte datos
-**JSON** y devuelva datos **JSON**.
+The mission's objective is to develop a **HTTP endpoint** that receives **JSON** data and returns **JSON** data.
 
-El módulo de visión enviará una petición **POST** a ```/radar``` con la
-información que recibe de su entorno, y el módulo que usted debe desarrollar
-deberá devolver cuales son las coordenadas del objetivo visible que debe de ser
-atacado.
+The vision module will send a **POST** request to ```/radar``` with the information from its environment. The radar module you develop should return the coordinates of the visible objective to attack.
 
-Un ejemplo de cuerpo de envío sería:
+The request body could be as follows:
 ```{"protocols":["avoid-mech"],"scan":[{"coordinates":{"x":0,"y":40},"enemies":{"type":"soldier","number":10}}]}```
 
-  - ```protocols```: Protocolo o lista de protocolos que han de ser usados para
-    determinar cual de los siguientes puntos debe de atacarse primero.
-  - ```scan```: Lista de puntos extraidos del módulo de visión, que es un array
-    de puntos con el número de objetivos de esa posición, y los siguientes subvalores:
-      + ```coordinates``` : Coordenadas ```x``` e ```y``` del punto.
-      + ```enemies``` : Tipo de enemigo ```type``` y número ```number```. Los
-        posibles valores de type serán: **soldier** y **mech**.
-      + (optional) ```allies``` : Número de aliados que hay en dicha posición. Si
-        no está presente este valor, significa que no hay aliados en la zona.
+  - ```protocols```: Protocol or list of protocols to be used to determine which of the following points should be attacked first.
+  - ```scan```: List of extracted points from the vision module. It's an array of points with the number of targets in that position. It has the following sub-values:
+      + ```coordinates``` : Coordinates ```x``` and ```y``` of the point.
+      + ```enemies``` : Enemy type ```type``` and number ```number```. The suitable values for the type are **soldier** y **mech**.
+      + (optional) ```allies``` : Number of allies on the position. If not present, means that no allies in the zone.
 
-La respuesta debe de contener las coordenadas ```x``` e ```y``` del siguiente
-punto a destruir.
+The answer should contain coordinates ```x``` and ```y``` and the next point to destroy.
 
-Un ejemplo de cuerpo de respuesta para el ejemplo anterior sería: ```{"x":0,"y":40}```
+An example of the response body for the previous example would be ```{"x":0,"y":40}```. Hence, our *YVH* combat droid would know which is the following element to destroy.
 
-De esa manera, nuestro droide de combate *YVH* sabría cual es el siguiente
-elemento que debe destruir.
+To determine the next point to destroy, follow the rules for each of the requested protocols.
 
-Para determinar cual es el siguiente punto a destruir, deben de tenerse en
-cuenta cuales son los protocolos solicitados, y actuar según sus reglas.
-
-Protocolos disponibles:
+Available protocols
 -----------------------
 
- - **closest-enemies** : Se deberá priorizar el punto más cercano en el que haya enemigos.
- - **furthest-enemies** : Se deberá priorizar el punto más lejano en el que haya enemigos.
+ - **closest-enemies** : prioritize closest enemy point.
+ - **furthest-enemies** : prioritize furthest enemy point.
 
- - **assist-allies** : Deberan de priorizarse los puntos en los que exista algún aliado.
- - **avoid-crossfire** : No debe de atacarse ningún punto en el que haya algún
-   aliado.
+ - **assist-allies** : priorityze enemy points with allies.
+ - **avoid-crossfire** : do not attack enemy points with allies.
 
- - **prioritize-mech** : Debe de atacarse un *mech* si se encuentra. En caso
-   negativo, cualquier otro tipo de objetivo será válido.
- - **avoid-mech** : No debe de atacarse ningún enemigo del tipo *mech*
+ - **prioritize-mech** : attach *mech* enemies if found. Otherwise, any other enemy type is valid.
+ - **avoid-mech** : do not attack any *mech* enemies.
 
-Es importante denotar que podrán proporcionarse varios protocolos en la
-petición. A modo de ejemplo, si recibiésemos los protocolos **closest-enemies**
-y **assist-allies**, deberíamos buscar el punto más cercano que tuviese aliados
-presentes.
+It's important to mention that several protocols could be provided in the request. As an example, if we receive the protocols **closest-enemies** and **assist-allies**, we should choose the closest point having allies present.
 
-En todo caso se proporcionarán protocolos compatibles entre sí. Puede asumirse
-que en ningún caso el módulo recibirá, por ejemplo, los protocolos
-**closest-enemies** y **furthest-enemies** en la misma petición.
+The protocols that will be supplied in the call will always be compatible with each other. You can assume that the module will not recieve the protocols **closest-enemies** and **furthest-enemies** in the same request.
 
-Finalmente es importante tener en cuenta que los objetivos a una distancia superior
-a **100m** se consideran demasiado alejados para ser atacados y por lo tanto deben ser
-ignorados.
+Finally, it's important to note that targets above a distance of *100m* are considered too far to be attacked and should be ignored.
 
-Consideraciones adicionales:
+Additional considerations
 ----------------------------
 
-Nuestras fuerzas de inteligencia obtienen nueva información y estrategias enemigas cada día
-por lo que es fundamental que el código generado sea fácil de mantener y extender. Para ello,
-deberán aplicarse buenas prácticas de **programación orientada a objetos** y **testing**.
+Our intelligence forces obtain new information and strategies every day, so it's fundamental that the generated code is easy mantainable and extensible. To do that, good practises such as **object oriented programming** and **testing** should be applied.
 
-Dado que esta labor es de vital importancia para la Nueva República,
-hemos provisto una serie de casos de prueba que verificarán al menos que el algoritmo funciona correctamente.
+Because of the importance of the mission for the New Republic, we have provided several test cases that will at least verify that the algorithm works correctly.
 
-Deberás tener ```curl``` instalado y ejecutar el comando ```./tests.sh``` en tu
-máquina OSX o Linux
+You should have ```curl``` installed and run the command ```./tests.sh``` in your machine.
 
-Entrega:
+Delivery
 --------
 
-Al finalizar la misión, se precisa que comprima todos los ficheros fuente, con
-este repositorio incluido en un fichero que se llame:
-```<username-en-github>_codetest2_seedtag.zip``` y lo envíe por correo
-electrónico a la dirección: ```alianza@seedtag.com```
+After the mission is complete, it is a requirement to compress all source files within this repository in a zip file named ```<username-en-github>_codetest2_seedtag.zip``` and send it via email to ```alianza@seedtag.com```
 
-Buena suerte, **may the Force be with you**.
+Good luck, **may the Force be with you**.
 
