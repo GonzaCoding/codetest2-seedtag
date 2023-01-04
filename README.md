@@ -19,7 +19,7 @@ The request body could be as follows:
   - ```protocols```: Protocol or list of protocols to be used to determine which of the following points should be attacked first.
   - ```scan```: List of extracted points from the vision module. It's an array of points with the number of targets in that position. It has the following sub-values:
       + ```coordinates``` : Coordinates ```x``` and ```y``` of the point.
-      + ```enemies``` : Enemy type ```type``` and number ```number```. The suitable values for the type are **soldier** y **mech**.
+      + ```enemies``` : Enemy type ```type``` and number ```number```. The suitable values for the type are **soldier** and **mech**.
       + (optional) ```allies``` : Number of allies on the position. If not present, means that no allies in the zone.
 
 The answer should contain coordinates ```x``` and ```y``` and the next point to destroy.
