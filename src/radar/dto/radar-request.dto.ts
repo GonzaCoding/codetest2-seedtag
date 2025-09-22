@@ -1,4 +1,11 @@
-import { IsArray, IsString, IsNumber, IsOptional, ValidateNested, IsEnum } from 'class-validator';
+import {
+  IsArray,
+  IsString,
+  IsNumber,
+  IsOptional,
+  ValidateNested,
+  IsEnum,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -13,7 +20,11 @@ export class CoordinatesDto {
 }
 
 export class EnemiesDto {
-  @ApiProperty({ description: 'Enemy type', enum: ['soldier', 'mech'], example: 'soldier' })
+  @ApiProperty({
+    description: 'Enemy type',
+    enum: ['soldier', 'mech'],
+    example: 'soldier',
+  })
   @IsEnum(['soldier', 'mech'])
   type: 'soldier' | 'mech';
 
@@ -23,7 +34,10 @@ export class EnemiesDto {
 }
 
 export class ScanPointDto {
-  @ApiProperty({ description: 'Coordinates of the scan point', type: CoordinatesDto })
+  @ApiProperty({
+    description: 'Coordinates of the scan point',
+    type: CoordinatesDto,
+  })
   @ValidateNested()
   @Type(() => CoordinatesDto)
   coordinates: CoordinatesDto;
@@ -33,25 +47,29 @@ export class ScanPointDto {
   @Type(() => EnemiesDto)
   enemies: EnemiesDto;
 
-  @ApiProperty({ description: 'Number of allies (optional)', example: 5, required: false })
+  @ApiProperty({
+    description: 'Number of allies (optional)',
+    example: 5,
+    required: false,
+  })
   @IsOptional()
   @IsNumber()
   allies?: number;
 }
 
 export class RadarRequestDto {
-  @ApiProperty({ 
-    description: 'List of protocols to apply', 
+  @ApiProperty({
+    description: 'List of protocols to apply',
     example: ['avoid-mech'],
-    type: [String]
+    type: [String],
   })
   @IsArray()
   @IsString({ each: true })
   protocols: string[];
 
-  @ApiProperty({ 
-    description: 'List of scan points', 
-    type: [ScanPointDto]
+  @ApiProperty({
+    description: 'List of scan points',
+    type: [ScanPointDto],
   })
   @IsArray()
   @ValidateNested({ each: true })
