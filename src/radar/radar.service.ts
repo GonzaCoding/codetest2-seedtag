@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ScanPoint } from './interfaces/target.interface';
 import { withinRange } from './utils/distance.util';
 import { PROTOCOLS } from './protocols';
@@ -35,5 +35,46 @@ export class RadarService {
     }
 
     return candidates;
+  }
+
+  /**
+   * Apply tie-breaker logic to select the final target
+   * Tie-breaker order: enemies.number desc, mech>soldier, x asc, y asc
+   * @param scanPoints Array of scan points to apply tie-breaker to
+   * @returns The selected target point
+   * @throws NotFoundException if no candidates remain
+   */
+  applyTieBreaker(scanPoints: ScanPoint[]): ScanPoint {
+    if (scanPoints.length === 0) {
+      throw new NotFoundException('No target found');
+    }
+
+    if (scanPoints.length === 1) {
+      return scanPoints[0];
+    }
+
+    // Sort using tie-breaker logic
+    const sorted = scanPoints.sort((a, b) => {
+      // 1. enemies.number desc (higher number first)
+      if (a.enemies.number !== b.enemies.number) {
+        return b.enemies.number - a.enemies.number;
+      }
+
+      // 2. mech > soldier (mech enemies prioritized)
+      if (a.enemies.type !== b.enemies.type) {
+        if (a.enemies.type === 'mech') return -1;
+        if (b.enemies.type === 'mech') return 1;
+      }
+
+      // 3. x asc (lower x coordinate first)
+      if (a.coordinates.x !== b.coordinates.x) {
+        return a.coordinates.x - b.coordinates.x;
+      }
+
+      // 4. y asc (lower y coordinate first)
+      return a.coordinates.y - b.coordinates.y;
+    });
+
+    return sorted[0];
   }
 }

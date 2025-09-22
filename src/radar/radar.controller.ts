@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { RadarService } from './radar.service';
 import { RadarRequestDto } from './dto/radar-request.dto';
 
@@ -8,27 +14,33 @@ export class RadarController {
 
   @Post()
   processRadar(@Body() radarRequest: RadarRequestDto) {
-    // Pre-filter scan points by distance
-    const filteredScanPoints = this.radarService.preFilterByDistance(
-      radarRequest.scan,
-    );
+    try {
+      // Pre-filter scan points by distance
+      const filteredScanPoints = this.radarService.preFilterByDistance(
+        radarRequest.scan,
+      );
 
-    // Apply protocols sequentially
-    const processedPoints = this.radarService.applyProtocols(
-      filteredScanPoints,
-      radarRequest.protocols,
-    );
+      // Apply protocols sequentially
+      const processedPoints = this.radarService.applyProtocols(
+        filteredScanPoints,
+        radarRequest.protocols,
+      );
 
-    // Return the first remaining point after protocol application
-    if (processedPoints.length > 0) {
-      const firstPoint = processedPoints[0];
+      // Return the first point after protocol application (protocols handle prioritization)
+      const selectedTarget = processedPoints[0];
+
       return {
-        x: firstPoint.coordinates.x,
-        y: firstPoint.coordinates.y,
+        x: selectedTarget.coordinates.x,
+        y: selectedTarget.coordinates.y,
       };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        { error: 'Internal server error' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    // If no points remain after processing, return default
-    return { x: 0, y: 0 };
   }
 }
