@@ -213,6 +213,96 @@ Get available targeting protocols.
 
 Protocols are applied **sequentially** in the order specified. Each protocol refines the target list based on its criteria.
 
+### 🔌 Extensibility: Adding New Protocols and Expanding the Codebase
+
+The system is designed to be easily maintainable and extensible using OOP and strong testing practices. To add a new targeting protocol:
+
+1) Create a new protocol class
+
+- File: `src/radar/protocols/<your-protocol>.protocol.ts`
+- Implement the `IProtocol` interface from `src/radar/protocols/protocol.interface.ts`
+- Keep implementations pure (do not mutate input arrays)
+
+```ts
+import { IProtocol } from './protocol.interface';
+import { ScanPoint } from '../interfaces/target.interface';
+
+export class SniperTargetProtocol implements IProtocol {
+  name: 'sniper-target' as const;
+
+  apply(scanPoints: ScanPoint[]): ScanPoint[] {
+    // Example: prioritize far targets without allies
+    const candidates = scanPoints.filter(p => !p.allies);
+    // Return a new array; do not mutate the input
+    return [...candidates].sort((a, b) => {
+      const da = Math.hypot(a.coordinates.x, a.coordinates.y);
+      const db = Math.hypot(b.coordinates.x, b.coordinates.y);
+      return db - da; // furthest first
+    });
+  }
+}
+```
+
+2) Register your protocol
+
+- File: `src/radar/protocols/index.ts`
+- Add to the registry so it can be resolved by name
+
+```ts
+import { SniperTargetProtocol } from './sniper-target.protocol';
+// ... existing registrations ...
+PROTOCOLS.set('sniper-target', new SniperTargetProtocol());
+```
+
+3) (Optional) Document your protocol for discovery
+
+- File: `src/radar/dto/protocols.dto.ts` → add an entry to `PROTOCOLS_INFO`
+- This powers `GET /radar/protocols` and improves Swagger docs
+
+```ts
+{
+  name: 'sniper-target',
+  description: 'Prioritize far targets without allied units',
+  category: 'distance', // or 'ally' / 'mech' depending on behavior
+}
+```
+
+4) Add unit tests (required)
+
+- File: `src/radar/protocols/<your-protocol>.protocol.spec.ts`
+- Cover: ordering, filtering, empty inputs, tie cases, and immutability (input not mutated)
+
+```ts
+import { SniperTargetProtocol } from './sniper-target.protocol';
+
+describe('SniperTargetProtocol', () => {
+  it('prioritizes far targets without allies', () => {
+    // arrange → act → assert
+  });
+});
+```
+
+5) Add E2E coverage (recommended)
+
+- Update `test/radar.e2e-spec.ts` with a scenario using your protocol name
+- Validate response codes (201 on success) and selection correctness
+
+Best practices for extension
+
+- **Single responsibility**: Keep each protocol focused on one concern
+- **Immutability**: Avoid mutating inputs; always return new arrays
+- **Composition over inheritance**: Share behavior via utilities (e.g., `distance.util.ts`)
+- **Test-first mindset**: Unit tests for protocols; E2E tests for flows
+- **Consistent naming**: `kebab-case` for protocol names in requests; `PascalCase` for classes
+- **Validation alignment**: If a new field is needed, update DTOs and Swagger decorators
+
+Where to expand beyond protocols
+
+- Utilities: Add helpers in `src/radar/utils/` (e.g., new scoring functions)
+- DTOs: Extend request/response contracts in `src/radar/dto/`
+- Error handling: Introduce specific exceptions where helpful
+- Docs: Update Swagger examples in `RadarController` to showcase new strategies
+
 ## 🛠️ Development
 
 ### Local Development
