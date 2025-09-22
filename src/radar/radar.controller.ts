@@ -13,16 +13,22 @@ export class RadarController {
       radarRequest.scan,
     );
 
-    // For now, return the first remaining point (temporary implementation)
-    if (filteredScanPoints.length > 0) {
-      const firstPoint = filteredScanPoints[0];
+    // Apply protocols sequentially
+    const processedPoints = this.radarService.applyProtocols(
+      filteredScanPoints,
+      radarRequest.protocols,
+    );
+
+    // Return the first remaining point after protocol application
+    if (processedPoints.length > 0) {
+      const firstPoint = processedPoints[0];
       return {
         x: firstPoint.coordinates.x,
         y: firstPoint.coordinates.y,
       };
     }
 
-    // If no points remain after filtering, return default
+    // If no points remain after processing, return default
     return { x: 0, y: 0 };
   }
 }
