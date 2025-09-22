@@ -7,27 +7,46 @@ import { PROTOCOLS } from './protocols';
 // Mock the protocols
 jest.mock('./protocols', () => ({
   PROTOCOLS: new Map([
-    ['closest-enemies', {
-      name: 'closest-enemies',
-      apply: jest.fn((points) => points.sort((a, b) => {
-        const distA = Math.sqrt(a.coordinates.x ** 2 + a.coordinates.y ** 2);
-        const distB = Math.sqrt(b.coordinates.x ** 2 + b.coordinates.y ** 2);
-        return distA - distB;
-      }))
-    }],
-    ['prioritize-mech', {
-      name: 'prioritize-mech',
-      apply: jest.fn((points) => {
-        const mechPoints = points.filter(p => p.enemies.type === 'mech');
-        const otherPoints = points.filter(p => p.enemies.type !== 'mech');
-        return mechPoints.length > 0 ? [...mechPoints, ...otherPoints] : points;
-      })
-    }],
-    ['avoid-mech', {
-      name: 'avoid-mech',
-      apply: jest.fn((points) => points.filter(p => p.enemies.type !== 'mech'))
-    }]
-  ])
+    [
+      'closest-enemies',
+      {
+        name: 'closest-enemies',
+        apply: jest.fn((points) =>
+          points.sort((a, b) => {
+            const distA = Math.sqrt(
+              a.coordinates.x ** 2 + a.coordinates.y ** 2,
+            );
+            const distB = Math.sqrt(
+              b.coordinates.x ** 2 + b.coordinates.y ** 2,
+            );
+            return distA - distB;
+          }),
+        ),
+      },
+    ],
+    [
+      'prioritize-mech',
+      {
+        name: 'prioritize-mech',
+        apply: jest.fn((points) => {
+          const mechPoints = points.filter((p) => p.enemies.type === 'mech');
+          const otherPoints = points.filter((p) => p.enemies.type !== 'mech');
+          return mechPoints.length > 0
+            ? [...mechPoints, ...otherPoints]
+            : points;
+        }),
+      },
+    ],
+    [
+      'avoid-mech',
+      {
+        name: 'avoid-mech',
+        apply: jest.fn((points) =>
+          points.filter((p) => p.enemies.type !== 'mech'),
+        ),
+      },
+    ],
+  ]),
 }));
 
 describe('RadarService', () => {
@@ -133,9 +152,14 @@ describe('RadarService', () => {
         },
       ];
 
-      const result = service.applyProtocols(scanPoints, ['prioritize-mech', 'closest-enemies']);
+      const result = service.applyProtocols(scanPoints, [
+        'prioritize-mech',
+        'closest-enemies',
+      ]);
 
-      expect(PROTOCOLS.get('prioritize-mech')?.apply).toHaveBeenCalledWith(scanPoints);
+      expect(PROTOCOLS.get('prioritize-mech')?.apply).toHaveBeenCalledWith(
+        scanPoints,
+      );
       expect(PROTOCOLS.get('closest-enemies')?.apply).toHaveBeenCalled();
       expect(result[0].enemies.type).toBe('mech');
     });
