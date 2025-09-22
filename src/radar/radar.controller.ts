@@ -4,6 +4,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { RadarService } from './radar.service';
 import { RadarRequestDto } from './dto/radar-request.dto';
@@ -25,6 +26,11 @@ export class RadarController {
         filteredScanPoints,
         radarRequest.protocols,
       );
+
+      // Check if any targets remain after filtering and protocol application
+      if (processedPoints.length === 0) {
+        throw new NotFoundException('No target found');
+      }
 
       // Return the first point after protocol application (protocols handle prioritization)
       const selectedTarget = processedPoints[0];

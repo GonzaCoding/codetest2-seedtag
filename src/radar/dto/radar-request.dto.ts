@@ -5,6 +5,7 @@ import {
   IsOptional,
   ValidateNested,
   IsEnum,
+  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -43,6 +44,7 @@ export class ScanPointDto {
   coordinates: CoordinatesDto;
 
   @ApiProperty({ description: 'Enemy information', type: EnemiesDto })
+  @IsNotEmpty()
   @ValidateNested()
   @Type(() => EnemiesDto)
   enemies: EnemiesDto;
