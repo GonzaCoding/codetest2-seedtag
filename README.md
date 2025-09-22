@@ -23,7 +23,7 @@ A high-performance, enterprise-grade targeting system built with NestJS that pro
 - [Contributing](#contributing)
 - [Documentation](#documentation)
 
-## 🚀 Overview
+## 🚀 Overview <a id="overview"></a>
 
 The Radar API is a sophisticated targeting system that processes radar scan data and applies multiple targeting protocols to select the optimal enemy target. It's designed for high-performance scenarios where precise target selection is critical.
 
@@ -36,7 +36,7 @@ The Radar API is a sophisticated targeting system that processes radar scan data
 - **Real-time Processing**: Sub-millisecond response times
 - **Enterprise Ready**: Comprehensive validation, error handling, and monitoring
 
-## ✨ Features
+## ✨ Features <a id="features"></a>
 
 ### 🎯 Targeting Protocols
 - **Distance-based**: `closest-enemies`, `furthest-enemies`
@@ -57,7 +57,7 @@ The Radar API is a sophisticated targeting system that processes radar scan data
 - **Memory**: < 50MB memory footprint
 - **Scalability**: Horizontal scaling ready
 
-## 🏗️ Architecture
+## 🏗️ Architecture <a id="architecture"></a>
 
 ```
 src/
@@ -91,7 +91,7 @@ src/
 - **DTO Pattern**: Type-safe data transfer objects with validation
 - **Dependency Injection**: NestJS built-in DI container
 
-## 🚀 Quick Start
+## 🚀 Quick Start <a id="quick-start"></a>
 
 ### Prerequisites
 
@@ -139,7 +139,7 @@ curl -X POST http://localhost:8888/radar \
 # Response: {"x": 0, "y": 40}
 ```
 
-## 📚 API Documentation
+## 📚 API Documentation <a id="api-documentation"></a>
 
 ### Interactive Documentation
 
@@ -186,7 +186,7 @@ Get available targeting protocols.
 ]
 ```
 
-## 🎯 Targeting Protocols
+## 🎯 Targeting Protocols <a id="targeting-protocols"></a>
 
 ### Distance Protocols
 
@@ -303,7 +303,7 @@ Where to expand beyond protocols
 - Error handling: Introduce specific exceptions where helpful
 - Docs: Update Swagger examples in `RadarController` to showcase new strategies
 
-## 🛠️ Development
+## 🛠️ Development <a id="development"></a>
 
 ### Local Development
 
@@ -340,7 +340,7 @@ npm run lint               # Run ESLint
 npm run format             # Format code with Prettier
 ```
 
-## 🧪 Testing
+## 🧪 Testing <a id="testing"></a>
 
 ### Test Coverage
 
@@ -380,7 +380,7 @@ test/
 └── radar.e2e-spec.ts             # E2E tests
 ```
 
-## 🐳 Docker Deployment
+## 🐳 Docker Deployment <a id="docker-deployment"></a>
 
 ### Docker Compose (Recommended)
 
@@ -412,7 +412,7 @@ sudo docker run -p 8888:3000 radar-api
 - **Hot Reload**: Enabled for development
 - **Volume Mounting**: Source code mounted for live updates
 
-## 📊 Performance
+## 📊 Performance <a id="performance"></a>
 
 ### Benchmarks
 
@@ -431,7 +431,7 @@ sudo docker run -p 8888:3000 radar-api
 - **Memory Management**: Minimal object allocation
 - **Caching**: Protocol registry caching
 
-## 📖 Documentation
+## 📖 Documentation <a id="documentation"></a>
 
 ### Comprehensive Documentation
 
@@ -454,7 +454,7 @@ sudo docker run -p 8888:3000 radar-api
 - **JSDoc**: Comprehensive inline documentation
 - **README**: This comprehensive guide
 
-## 🤝 Contributing
+## 🤝 Contributing <a id="contributing"></a>
 
 ### Development Workflow
 
