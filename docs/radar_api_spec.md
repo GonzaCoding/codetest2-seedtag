@@ -1,19 +1,41 @@
-# 📘 Radar API — Detailed Specification
+# 🚀 Radar API — Developer Specification
 
-## 1. Overview
-We need a **NestJS application** exposing a single endpoint:
+## 1. Project Overview
+We need to build a **NestJS application** that exposes a **single API endpoint**:
 
-- `POST /radar`
-- Accepts a JSON payload with **protocols** and **scan** data.
-- Returns the **next target coordinates `{x,y}`** or an **error**.
+- **Endpoint**: `POST /radar`  
+- **Purpose**: Given a set of detected enemy positions and operational protocols, determine **the next point to attack**.  
+- **Response**: `{x, y}` coordinates of the selected target.  
 
-The service applies **protocol rules** in order, filters out invalid candidates, applies tie-breakers, and returns one deterministic target.
+The service must strictly follow **protocol rules**, apply **filters and tie-breakers**, handle **errors gracefully**, and provide **tests and documentation**.
 
 ---
 
-## 2. Request Schema
+## 2. Requirements
 
-### Example Request
+### Functional
+- Accept a JSON payload containing:
+  - `protocols`: array of strings defining selection strategies.
+  - `scan`: array of detected enemy positions.
+- Return the coordinates of the **next attack target**.
+- Apply protocols in **the order provided**.
+- Enforce **distance limit of 100 units**.
+- Return consistent, deterministic results using defined **tie-breakers**.
+- Reject invalid requests with proper error messages.
+
+### Non-Functional
+- Implemented in **NestJS** with **TypeScript**.
+- Use **class-validator** for input validation.
+- Use **NestJS Logger** for basic logging.
+- Provide **Swagger docs** at `/docs`.
+- Include **unit and e2e tests** with Jest + supertest.
+- No Docker required — runnable via `npm run start:dev`.
+
+---
+
+## 3. API Design
+
+### Request Schema
 ```json
 {
   "protocols": ["avoid-mech", "closest-enemies"],
@@ -31,63 +53,59 @@ The service applies **protocol rules** in order, filters out invalid candidates,
 }
 ```
 
-### Rules
-- **protocols**: array of strings (each one must match a known protocol).
-- **scan**: array of points, each containing:
-  - `coordinates: { x: number, y: number }`
-  - `enemies: { type: "soldier" | "mech", number: number }`
-  - `allies?: number`
-
----
-
-## 3. Response Schema
-
-### Success Response
+### Response Schema
+✅ Success:
 ```json
 { "x": 0, "y": 40 }
 ```
 
-### Error Responses
-- **400 Bad Request**
-  ```json
-  { "error": "invalid payload" }
-  ```
-- **404 Not Found**
-  ```json
-  { "error": "target not found" }
-  ```
+❌ Invalid Payload:
+```json
+{ "error": "invalid payload" }
+```
+
+❌ No Target Found:
+```json
+{ "error": "target not found" }
+```
 
 ---
 
 ## 4. Protocol Rules
 
-- **closest-enemies** → prioritize nearest enemy (Euclidean distance from (0,0)).
-- **furthest-enemies** → prioritize farthest enemy.
+- **closest-enemies** → pick nearest enemy by Euclidean distance from `(0,0)`.
+- **furthest-enemies** → pick farthest enemy.
 - **assist-allies** → prioritize points with allies.
 - **avoid-crossfire** → exclude points with allies.
-- **prioritize-mech** → prefer mech targets, fallback to soldier if none.
+- **prioritize-mech** → prefer mechs, fallback to soldiers.
 - **avoid-mech** → exclude mechs entirely.
 
-### Multiple Protocols
-- Applied **in the order they appear** in the payload.
+👉 Multiple protocols can be provided; they are applied **in request order**.
 
 ---
 
 ## 5. Filters
-- Ignore any target with **distance > 100**.
-- If **all enemies are filtered**, return `404 target not found`.
+- Compute **Euclidean distance** from `(0,0)`.  
+- Discard any target with `distance > 100`.  
 
 ---
 
-## 6. Tie-breaker Rules
-When multiple candidates remain after protocol application:
-1. **Number of enemies** (prefer more).  
-2. **Enemy type** (prefer mech over soldier).  
-3. **Coordinates**: lower `x`; if still tied, lower `y`.
+## 6. Tie-Breakers
+If multiple candidates remain:
+1. Higher **enemy count**.
+2. Prefer **mech** over soldier.
+3. Lower **x**, then lower **y**.
 
 ---
 
-## 7. Project Structure
+## 7. Error Handling
+- **400 Bad Request** if payload is malformed or missing fields.  
+- **404 Not Found** if no valid target survives filtering.  
+- Always respond with a JSON object containing an `"error"` message.
+
+---
+
+## 8. Architecture & Structure
 
 ```
 src/
@@ -95,8 +113,8 @@ src/
  ├── main.ts
  ├── radar/
  │    ├── radar.module.ts
- │    ├── radar.controller.ts
- │    ├── radar.service.ts
+ │    ├── radar.controller.ts   # Defines POST /radar
+ │    ├── radar.service.ts      # Implements business logic
  │    ├── dto/
  │    │    └── radar-request.dto.ts
  │    ├── interfaces/
@@ -114,18 +132,16 @@ test/
  │    ├── radar.service.spec.ts
  │    ├── radar.controller.spec.ts
  │    ├── protocols/
- │    │    ├── closest-enemies.protocol.spec.ts
- │    │    ├── ...
+ │    │    └── closest-enemies.protocol.spec.ts
  └── e2e/
       └── radar.e2e-spec.ts
 ```
 
 ---
 
-## 8. Validation
+## 9. Validation
 
-Using **class-validator**:
-
+### DTO Example
 ```ts
 export class CoordinatesDto {
   @IsInt() x: number;
@@ -144,8 +160,7 @@ export class ScanDto {
 }
 
 export class RadarRequestDto {
-  @IsArray()
-  @ArrayNotEmpty()
+  @IsArray() @ArrayNotEmpty()
   @IsIn(
     [
       "closest-enemies",
@@ -168,44 +183,30 @@ export class RadarRequestDto {
 
 ---
 
-## 9. Service Logic
-
-- **Step 1**: Filter out points with `distance > 100`.  
-- **Step 2**: Apply each protocol in request order.  
-- **Step 3**: If multiple remain, apply tie-breakers.  
-- **Step 4**: Return `{x, y}` of selected target.  
-- **Step 5**: If none remain, throw 404.  
+## 10. Service Logic
+1. Filter out targets with `distance > 100`.
+2. Sequentially apply each protocol from `protocols`.
+3. If multiple remain → apply tie-breakers.
+4. If none remain → throw 404.
+5. Return `{x, y}` of selected target.
 
 ---
 
-## 10. Testing
+## 11. Testing Plan
 
 ### Unit Tests
-- Each protocol individually.  
-- RadarService applying protocols.  
-- DTO validation errors.  
-- Tie-breakers.  
+- ✅ Protocol logic individually.
+- ✅ RadarService applying multiple protocols.
+- ✅ DTO validation errors.
+- ✅ Tie-breaker resolution.
 
-### E2E Tests (supertest)
-- ✅ Happy path (target found).  
-- ❌ Invalid payload → 400.  
-- ❌ No target found → 404.  
-- ✅ Multiple protocols applied.  
+### E2E Tests
+- ✅ Happy path request → 200 `{x,y}`.
+- ❌ Invalid payload → 400 `{error}`.
+- ❌ No target found → 404 `{error}`.
+- ✅ Multiple protocols applied correctly.
 
----
-
-## 11. Swagger Docs
-
-- Installed with `@nestjs/swagger`.  
-- Exposed at `/docs`.  
-- Documents request/response schemas for `/radar`.
-
----
-
-## 12. Scripts
-
-In `package.json`:
-
+### Scripts
 ```json
 "scripts": {
   "start": "nest start",
@@ -218,11 +219,21 @@ In `package.json`:
 
 ---
 
-## 13. README.md
+## 12. Documentation
 
-### Contents
-- Setup (`npm install`, `npm run start:dev`).  
-- Running tests (`npm run test`, `npm run test:e2e`, `npm run test:cov`).  
-- Example request/response.  
-- Error cases.  
-- Swagger docs at `/docs`.  
+- Swagger docs served at **`/docs`**.
+- README must include:
+  - Installation and run instructions.
+  - Testing instructions.
+  - Example requests/responses.
+  - Error cases.
+  - Swagger link.
+
+---
+
+## 13. Deliverables
+
+- ✅ Full NestJS project.  
+- ✅ Unit + e2e tests passing.  
+- ✅ Swagger docs available at `/docs`.  
+- ✅ README.md with usage instructions.  
