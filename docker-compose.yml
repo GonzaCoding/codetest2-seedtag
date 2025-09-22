@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  radar-api:
+    build: .
+    ports:
+      - "8888:3000"  # Map host port 8888 to container port 3000
+    volumes:
+      - .:/app        # Mount current directory for hot reloading
+      - /app/node_modules  # Exclude node_modules from volume mount
+    environment:
+      - NODE_ENV=development
+    command: npm run start:dev
+    stdin_open: true
+    tty: true
